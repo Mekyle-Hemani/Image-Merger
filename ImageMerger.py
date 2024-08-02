@@ -6,6 +6,7 @@ from PIL import Image
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import datetime
+import time
 
 extensions = [".pdf", ".PDF", ".jpg", ".JPG", ".webp", ".WEBP", ".png", ".PNG"]
 
@@ -57,16 +58,15 @@ def find_files(directory):
 
 def add_image_to_pdf(image_path, pdf_writer):
     try:
-        c = canvas.Canvas("temp_image.pdf", pagesize=letter)
-        # Open the image
-        with Image.open(image_path) as img:
-            width, height = img.size
-            # Adjust the image size to fit in the PDF page
-            c.drawImage(image_path, 0, 0, width=min(width, 600), height=min(height, 800))
+        image = Image.open(image_path)
+        width, height = image.size
+        c = canvas.Canvas("temp_image.pdf", pagesize=(width, height))
+        c.drawImage(image_path, 0, 0, width, height)
         c.save()
         pdf_reader = PdfReader("temp_image.pdf")
         pdf_writer.add_page(pdf_reader.pages[0])
         os.remove("temp_image.pdf")
+        print_colored(f"Added image: {image_path}", ORANGE)
     except Exception as e:
         print(f"Error adding image to PDF: {e}")
 
@@ -89,8 +89,17 @@ def combine_files(output_filename, input_files):
     with open(output_filename, 'wb') as output_pdf:
         pdf_writer.write(output_pdf)
 
-# Main execution
 result = find_files(select_folder("Select Files"))
 
 output_filename = f"{select_folder('Select Output Location')}/CombinedPDF_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+
+countdown = 5
+
+while countdown!=0:
+    print_colored(f"Combining given files in {countdown} seconds", YELLOW)
+    time.sleep(1)
+    countdown -= 1
+
 combine_files(output_filename, result[0])
+
+print_colored(f"Done combining files at: {output_filename}", BLUE)
