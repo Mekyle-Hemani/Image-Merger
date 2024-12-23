@@ -3,6 +3,7 @@ import merging
 import saving
 
 import time
+import subprocess
 
 if saving.load(filename="files.pkl") == None:
     filesMerging,filePath=fileSelecting.selectFiles()
@@ -20,4 +21,5 @@ if filePath != None:
     saving.save(result, filename="path.pkl")
 
     if result!= None:
-        merging.merge(filesMerging, result+"/"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))+".pdf")
+        merging.merge(filesMerging, result+"/"+str(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()))+".pdf")
+        subprocess.run(['explorer', result])
