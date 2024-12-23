@@ -20,4 +20,4 @@ if filePath != None:
     saving.save(result, filename="path.pkl")
 
     if result!= None:
-        merging.merge(filesMerging, result+"/"+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())+".pdf")
+        merging.merge(filesMerging, result+"/"+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))+".pdf")
